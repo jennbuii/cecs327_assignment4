@@ -101,6 +101,17 @@ class TCPServer:
                         response = {"status": "error", "message": f"No partition found for job_id '{job_id}'."}
                     print(f"[{self.port}] handling {action} request for job_id '{job_id}'")
 
+                elif action == "PAXOS_ACCEPT":
+                    proposal_id = request.get("proposal_id")
+                    op = request.get("op")
+                    response = self.storage.paxos.handle_accept(proposal_id, op)
+                    print(f"[{self.port}] handling {action} request for proposal_id '{proposal_id}'")
+                
+                elif action == "PAXOS_LEARN":
+                    proposal_id = request.get("proposal_id")
+                    response = self.storage.paxos.handle_learn(proposal_id)
+                    print(f"[{self.port}] handling {action} request for proposal_id '{proposal_id}'")
+
                 else:
                     response = {"status": "error", "message": f"Unknown action '{action}'."}
                 conn.sendall((json.dumps(response) + "\n").encode())

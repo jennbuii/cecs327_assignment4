@@ -2,10 +2,13 @@
 # knows what a file is, what metadata looks like, how to split files into pages, and how to store metadata and pages using the ChordNode's storage layer
 import hashlib
 from chord_node import ChordNode
+import tempfile
+import os
 
 class DFSAPI:
-    def __init__(self, chord, page_size=1024):
+    def __init__(self, chord, paxos=None, page_size=1024):
         self.chord = chord
+        self.paxos = paxos
         self.page_size = page_size
 
     #helper functions
@@ -51,8 +54,44 @@ class DFSAPI:
             pages.append(data[i:i+self.page_size])
         return pages
 
-    #part a methods
+    #paxos helper functions
+    def apply_op(self, op):
+        op_type = op["op"]
+        if op_type == "touch":
+            return self._apply_touch(op["filename"])
+        elif op_type == "append":
+            return self._apply_append(op["filename"], op["content"])
+        elif op_type == "delete_file":
+            return self._apply_delete_file(op["filename"])
+        else:
+            return {"status": "error", "message": f"Unknown operation type '{op_type}'."}
+
+    #paxos methods
     def touch(self, filename):
+        if self.paxos is None:
+            return self._apply_touch(filename)
+        op = {"op": "touch", "filename": filename}
+        return self.paxos.propose(op)
+    
+    def append(self, filename, local_path):
+        try:
+            with open(local_path, 'r') as f:
+                data = f.read()
+        except Exception as e:
+            return {"status": "error", "message": f"Failed to read local file: {str(e)}"}
+        if self.paxos is None:
+            return self._apply_append(filename, local_path)
+        op = {"op": "append", "filename": filename, "content": data}
+        return self.paxos.propose(op)
+    
+    def delete_file(self, filename):
+        if self.paxos is None:
+            return self._apply_delete_file(filename)
+        op = {"op": "delete_file", "filename": filename}
+        return self.paxos.propose(op)
+
+    #part a methods
+    def _apply_touch(self, filename):
         # create empty file metadata and add to index
         key = self._metadata_key(filename)
         file = self.chord.get(key)
@@ -83,7 +122,7 @@ class DFSAPI:
         index = self._get_index()
         return {"status": "success", "filenames": index["filenames"]}
     
-    def append(self, filename, local_path):
+    def _apply_append(self, filename, local_path):
         # append data from local file to DFS file
         key = self._metadata_key(filename)
         result = self.chord.get(key)
@@ -128,7 +167,7 @@ class DFSAPI:
             data.append(page["object"]["data"])
         return {"status": "success", "content": "".join(data)}
     
-    def delete_file(self, filename):
+    def _apply_delete_file(self, filename):
         # delete metadata and all pages for a file
         key = self._metadata_key(filename)
         result = self.chord.get(key)

@@ -1,14 +1,14 @@
 # load config for node, creates ChordNode, creates DFS API object, starts TCP server
 from storage import Storage
 from chord_node import ChordNode
-from dfs_api import DFSAPI
+from dfs import DFSAPI
 from server import TCPServer
 import sys
 
 PEERS = [
-    {"node_id": 50, "host": "127.0.0.1", "port": 5001},
-    {"node_id": 100, "host": "127.0.0.1", "port": 5002},
-    {"node_id": 150, "host": "127.0.0.1", "port": 5003}, 
+    {"node_id": 2, "host": "127.0.0.1", "port": 5001},
+    {"node_id": 4, "host": "127.0.0.1", "port": 5002},
+    {"node_id": 6, "host": "127.0.0.1", "port": 5003}, 
 ]
 
 def run_node(node_id, port, path_dir):

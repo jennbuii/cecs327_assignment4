@@ -24,6 +24,13 @@ class ChordNode:
     def _is_local(self, peer):
         return peer["node_id"] == self.node_id and peer["host"] == self.host and peer["port"] == self.port
     
+    def find_successor_for_sort(self, sort_key):
+        key_id = int(sort_key) % self.ring_size
+        for peer in self._sorted_peers():
+            if key_id <= peer["node_id"]:
+                return peer
+        return self._sorted_peers()[0]
+
     def find_successor(self, key):
         # find the peer responsible for the given key
         key_id = self._hash(key)

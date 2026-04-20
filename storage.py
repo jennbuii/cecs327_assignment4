@@ -35,14 +35,3 @@ class Storage:
                 os.remove(path)
                 return True
         return False
-
-'''def main():
-    # Example usage
-    storage = Storage('data/node1')
-    storage.store_object('example_key', {'foo': 'bar'})
-    obj = storage.load_object('example_key')
-    print(obj)  # Output: {'foo': 'bar'}
-    deleted = storage.delete_object('example_key')
-    print(deleted)  # Output: True
-
-main()'''

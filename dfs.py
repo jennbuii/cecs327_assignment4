@@ -84,7 +84,7 @@ class DFSAPI:
         return {"status": "success", "filenames": index["filenames"]}
     
     def append(self, filename, local_path):
-        # append data from local file to DFS file, update metadata, and add new pages
+        # append data from local file to DFS file
         key = self._metadata_key(filename)
         result = self.chord.get(key)
         if  result["status"] != "success":
@@ -113,7 +113,7 @@ class DFSAPI:
         return {"status": "success", "message": f"Appended {len(data)} bytes to '{filename}'.", "num_pages": len(chunks)}
     
     def read(self, filename):
-        # read all pages for a file and return combined data
+        # read all pages for a file
         key = self._metadata_key(filename)
         result = self.chord.get(key)
         if result["status"] != "success":
@@ -129,7 +129,7 @@ class DFSAPI:
         return {"status": "success", "content": "".join(data)}
     
     def delete_file(self, filename):
-        # delete metadata and all pages for a file, and remove from index
+        # delete metadata and all pages for a file
         key = self._metadata_key(filename)
         result = self.chord.get(key)
         if result["status"] != "success":

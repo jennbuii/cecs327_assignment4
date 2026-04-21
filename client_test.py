@@ -13,7 +13,7 @@ PEERS = [
 ]
 
 def run_tests():
-    print("Initializing DFS Client...")
+    print("Initializing DFS Client")
     # Setup temporary local storage for the client just so ChordNode doesn't complain
     storage = Storage("data/client_node")
     
@@ -53,6 +53,12 @@ def run_tests():
     res = dfs.read(dfs_output_name)
     if res.get("status") == "success":
         print(res["content"])
+
+        # Write sorted output to local file
+        local_output_path = dfs_output_name
+        with open(local_output_path, 'w') as f:
+            f.write(res["content"])
+        print(f"\nSorted output written to local file: {local_output_path}")
         
         # Perform logical check for report
         print("\n--- 6. Validating Sort Correctness ---")

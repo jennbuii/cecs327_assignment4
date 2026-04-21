@@ -29,13 +29,13 @@ class Sorter:
     def _clear_partition(self, job_id):
         for peer in self.chord._sorted_peers():
             if self.chord._is_local(peer):
-                partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions", f"{job_id}.json")
+                partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions")
                 path = os.path.join(partition_dir, f"{job_id}.json")
                 if os.path.exists(path):
                     os.remove(path)
                     print(f"Cleared partition for job_id '{job_id}' on node {peer['node_id']}")
             else:
-                request = {"action": "CLEAR_PARTITION", "job_id": job_id}
+                request = {"action": "CLEAR_SORT_PARTITION", "job_id": job_id}
                 self.chord._send_request(peer, request)
                 print(f"Sent CLEAR_PARTITION request for job_id '{job_id}' to node {peer['node_id']}")
 
@@ -44,7 +44,7 @@ class Sorter:
             peer = self.chord.find_successor_for_sort(key)
             record_data = [key, value]
             if self.chord._is_local(peer):
-                partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions", f"{job_id}.json")
+                partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions")
                 os.makedirs(partition_dir, exist_ok=True)
                 path = os.path.join(partition_dir, f"{job_id}.json")
                 if os.path.exists(path):
@@ -73,7 +73,7 @@ class Sorter:
         high_records = []
         for peer in sorted_peers:
             if self.chord._is_local(peer):
-                partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions", f"{job_id}.json")
+                partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions")
                 path = os.path.join(partition_dir, f"{job_id}.json")
                 if os.path.exists(path):
                     with open(path, 'r') as f:

@@ -79,6 +79,8 @@ class DFSAPI:
                 data = f.read()
         except Exception as e:
             return {"status": "error", "message": f"Failed to read local file: {str(e)}"}
+        chunks = self._split_into_pages(data)
+        
         if self.paxos is None:
             return self._apply_append(filename, local_path)
         op = {"op": "append", "filename": filename, "content": data}

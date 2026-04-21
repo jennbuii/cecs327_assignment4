@@ -25,7 +25,11 @@ class ChordNode:
         return peer["node_id"] == self.node_id and peer["host"] == self.host and peer["port"] == self.port
     
     def find_successor_for_sort(self, sort_key):
-        key_id = int(sort_key) % self.ring_size
+        try:
+            key_id = int(sort_key) % self.ring_size
+        except ValueError:
+            key_id = self._hash(sort_key)
+            
         for peer in self._sorted_peers():
             if key_id <= peer["node_id"]:
                 return peer

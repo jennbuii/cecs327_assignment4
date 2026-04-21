@@ -45,7 +45,7 @@ class PAXOS:
             if peer["node_id"] == self.node_id:
                 response = self.handle_accept(proposal_id, op)
             else:
-                response = self.chord._send_request(peer, {"action": "ACCEPT", "proposal_id": proposal_id, "op": op})
+                response = self.chord._send_request(peer, {"action": "PAXOS_ACCEPT", "proposal_id": proposal_id, "op": op})
             if response["status"] == "success" and response.get("action") == "PAXOS_LEARN" and response.get("proposal_id") == proposal_id:
                 learned += 1
         if learned < (len(self.replicas) // 2) + 1:

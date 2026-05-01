@@ -60,7 +60,7 @@ class DFSAPI:
         if op_type == "touch":
             return self._apply_touch(op["filename"])
         elif op_type == "append":
-            return self._apply_append(op["filename"], op["content"])
+            return self._apply_append_content(op["filename"], op["content"])
         elif op_type == "delete_file":
             return self._apply_delete_file(op["filename"])
         else:
@@ -153,6 +153,25 @@ class DFSAPI:
         self.chord.put(key, metadata)
         return {"status": "success", "message": f"Appended {len(data)} bytes to '{filename}'.", "num_pages": len(chunks)}
     
+    def _apply_append_content(self, filename, data):
+        key = self._metadata_key(filename)
+        result = self.chord.get(key)
+        if  result["status"] != "success":
+            return {"status": "error", "message": f"File '{filename}' not found."}
+        metadata = result["object"]
+        chunks = self._split_into_pages(data)
+        start_page_no = metadata["num_pages"]
+        for i, chunk in enumerate(chunks):
+            page_no = start_page_no + i
+            page_key = self._page_key(filename, page_no)
+            self.chord.put(page_key, {"kind": "page", "filename": filename, "page_no": page_no, "data": chunk})
+            metadata["pages"].append({"page_no": page_no, "page_key": page_key, "size_bytes": len(chunk)})
+        metadata["num_pages"] += len(chunks)
+        metadata["size_bytes"] += len(data)
+        metadata["version"] += 1
+        self.chord.put(key, metadata)
+        return {"status": "success", "message": f"Appended {len(data)} bytes to '{filename}'.", "num_pages": len(chunks)}
+
     def read(self, filename):
         # read all pages for a file
         key = self._metadata_key(filename)

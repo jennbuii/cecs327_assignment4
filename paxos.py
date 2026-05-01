@@ -31,7 +31,7 @@ class PAXOS:
             if proposal_id not in self.accepted:
                 return {"status": "error", "message": "Proposal ID not accepted"}
             self.committed.add(proposal_id)
-            self._apply_accepted()
+            self.last_applied = max(self.last_applied, proposal_id)
         return {"status": "success", "action": "PAXOS_LEARN", "proposal_id": proposal_id}
 
     def propose(self, op):
@@ -51,8 +51,7 @@ class PAXOS:
         if learned < (len(self.replicas) // 2) + 1:
             return {"status": "error", "message": "Failed to reach consensus"}
         for peer in self.replicas:
-            if peer["node_id"] == self.node_id:
-                self.handle_learn(proposal_id)
-            else:
-                self.chord._send_request(peer, {"action": "PAXOS_LEARN", "proposal_id": proposal_id, "op": op})
+            self.chord._send_request(peer, {"action": "PAXOS_LEARN", "proposal_id": proposal_id, "op": op})
+        if self.apply_callback:
+            self.apply_callback(op)
         return {"status": "success", "message": "Consensus reached"}

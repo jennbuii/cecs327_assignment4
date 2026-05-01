@@ -3,6 +3,7 @@ from storage import Storage
 from chord_node import ChordNode
 from dfs import DFSAPI
 from sorter import Sorter
+from paxos import PAXOS
 
 PEERS = [
     {"node_id": 2, "host": "127.0.0.1", "port": 5001},
@@ -19,7 +20,12 @@ def run_tests():
     
     # Client node acts as a temporary router (Node ID 999) to distribute requests
     chord = ChordNode(999, "127.0.0.1", 9999, PEERS, storage)
-    dfs = DFSAPI(chord)
+
+    replicas = chord.get_replica_peers("client_test_key", replication_factor=3)
+    paxos = PAXOS(node_id=999, chord=chord, replicas=replicas, apply_callback=None, is_leader=True) 
+    
+    dfs = DFSAPI(chord, paxos=paxos)
+    paxos.apply_callback = dfs.apply_op  # Set the DFS apply_op as the callback for Paxos to execute operations on commit
     sorter = Sorter(dfs, chord)
 
     input_file = "sample_input.csv"

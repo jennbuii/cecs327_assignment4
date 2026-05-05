@@ -1,0 +1,111 @@
+
+============================================================
+  PAXOS LOG — run started 2026-05-05 14:44:42
+============================================================
+[14:44:42.735][PAXOS][LEADER][Node 999] PROPOSE ballot=1 op_type=touch (need 2/3 for majority)
+[14:44:42.743][PAXOS][LEADER][Node 999] ACCEPT  -> Node 2 ballot=1
+[14:44:42.746][PAXOS][LEADER][Node 2] ACCEPT  ballot=1 op_type=touch -> ACK LEARN
+[14:44:42.746][PAXOS][LEADER][Node 999] LEARN   <- Node 2 ballot=1 (ack)
+[14:44:42.746][PAXOS][LEADER][Node 999] ACCEPT  -> Node 4 ballot=1
+[14:44:42.749][PAXOS][FOLLOWER][Node 4] ACCEPT  ballot=1 op_type=touch -> ACK LEARN
+[14:44:42.751][PAXOS][LEADER][Node 999] LEARN   <- Node 4 ballot=1 (ack)
+[14:44:42.751][PAXOS][LEADER][Node 999] ACCEPT  -> Node 6 ballot=1
+[14:44:42.751][PAXOS][FOLLOWER][Node 6] ACCEPT  ballot=1 op_type=touch -> ACK LEARN
+[14:44:42.751][PAXOS][LEADER][Node 999] LEARN   <- Node 6 ballot=1 (ack)
+[14:44:42.751][PAXOS][LEADER][Node 999] COMMIT  ballot=1 acks=3/3 -> COMMITTED
+[14:44:42.760][PAXOS][LEADER][Node 999] LEARN   -> Node 2 ballot=1
+[14:44:42.761][PAXOS][LEADER][Node 2] LEARN   ballot=1 op_type=touch -> COMMITTED (logged)
+[14:44:42.761][PAXOS][LEADER][Node 999] LEARN   -> Node 4 ballot=1
+[14:44:42.761][PAXOS][FOLLOWER][Node 4] LEARN   ballot=1 op_type=touch -> COMMITTED (logged)
+[14:44:42.761][PAXOS][LEADER][Node 999] LEARN   -> Node 6 ballot=1
+[14:44:42.770][PAXOS][FOLLOWER][Node 6] LEARN   ballot=1 op_type=touch -> COMMITTED (logged)
+[14:44:42.770][PAXOS][LEADER][Node 999] APPLY   ballot=1 op_type=touch (leader applying)
+[14:44:42.832][PAXOS][LEADER][Node 999] PROPOSE ballot=2 op_type=append (need 2/3 for majority)
+[14:44:42.834][PAXOS][LEADER][Node 999] ACCEPT  -> Node 2 ballot=2
+[14:44:42.836][PAXOS][LEADER][Node 2] ACCEPT  ballot=2 op_type=append -> ACK LEARN
+[14:44:42.839][PAXOS][LEADER][Node 999] LEARN   <- Node 2 ballot=2 (ack)
+[14:44:42.839][PAXOS][LEADER][Node 999] ACCEPT  -> Node 4 ballot=2
+[14:44:42.839][PAXOS][FOLLOWER][Node 4] ACCEPT  ballot=2 op_type=append -> ACK LEARN
+[14:44:42.844][PAXOS][LEADER][Node 999] LEARN   <- Node 4 ballot=2 (ack)
+[14:44:42.844][PAXOS][LEADER][Node 999] ACCEPT  -> Node 6 ballot=2
+[14:44:42.844][PAXOS][FOLLOWER][Node 6] ACCEPT  ballot=2 op_type=append -> ACK LEARN
+[14:44:42.844][PAXOS][LEADER][Node 999] LEARN   <- Node 6 ballot=2 (ack)
+[14:44:42.844][PAXOS][LEADER][Node 999] COMMIT  ballot=2 acks=3/3 -> COMMITTED
+[14:44:42.844][PAXOS][LEADER][Node 999] LEARN   -> Node 2 ballot=2
+[14:44:42.853][PAXOS][LEADER][Node 2] LEARN   ballot=2 op_type=append -> COMMITTED (logged)
+[14:44:42.855][PAXOS][LEADER][Node 999] LEARN   -> Node 4 ballot=2
+[14:44:42.857][PAXOS][FOLLOWER][Node 4] LEARN   ballot=2 op_type=append -> COMMITTED (logged)
+[14:44:42.857][PAXOS][LEADER][Node 999] LEARN   -> Node 6 ballot=2
+[14:44:42.861][PAXOS][FOLLOWER][Node 6] LEARN   ballot=2 op_type=append -> COMMITTED (logged)
+[14:44:42.863][PAXOS][LEADER][Node 999] APPLY   ballot=2 op_type=append (leader applying)
+[14:44:45.444][PAXOS][LEADER][Node 999] PROPOSE ballot=3 op_type=sort_file (need 2/3 for majority)
+[14:44:45.445][PAXOS][LEADER][Node 999] ACCEPT  -> Node 2 ballot=3
+[14:44:45.449][PAXOS][LEADER][Node 2] ACCEPT  ballot=3 op_type=sort_file -> ACK LEARN
+[14:44:45.449][PAXOS][LEADER][Node 999] LEARN   <- Node 2 ballot=3 (ack)
+[14:44:45.449][PAXOS][LEADER][Node 999] ACCEPT  -> Node 4 ballot=3
+[14:44:45.451][PAXOS][FOLLOWER][Node 4] ACCEPT  ballot=3 op_type=sort_file -> ACK LEARN
+[14:44:45.451][PAXOS][LEADER][Node 999] LEARN   <- Node 4 ballot=3 (ack)
+[14:44:45.451][PAXOS][LEADER][Node 999] ACCEPT  -> Node 6 ballot=3
+[14:44:45.451][PAXOS][FOLLOWER][Node 6] ACCEPT  ballot=3 op_type=sort_file -> ACK LEARN
+[14:44:45.451][PAXOS][LEADER][Node 999] LEARN   <- Node 6 ballot=3 (ack)
+[14:44:45.460][PAXOS][LEADER][Node 999] COMMIT  ballot=3 acks=3/3 -> COMMITTED
+[14:44:45.461][PAXOS][LEADER][Node 999] LEARN   -> Node 2 ballot=3
+[14:44:45.462][PAXOS][LEADER][Node 2] LEARN   ballot=3 op_type=sort_file -> COMMITTED (logged)
+[14:44:45.464][PAXOS][LEADER][Node 999] LEARN   -> Node 4 ballot=3
+[14:44:45.468][PAXOS][FOLLOWER][Node 4] LEARN   ballot=3 op_type=sort_file -> COMMITTED (logged)
+[14:44:45.468][PAXOS][LEADER][Node 999] LEARN   -> Node 6 ballot=3
+[14:44:45.468][PAXOS][FOLLOWER][Node 6] LEARN   ballot=3 op_type=sort_file -> COMMITTED (logged)
+[14:44:45.468][PAXOS][LEADER][Node 999] APPLY   ballot=3 op_type=sort_file (leader applying)
+[14:44:45.626][PAXOS][LEADER][Node 999] PROPOSE ballot=4 op_type=touch (need 2/3 for majority)
+[14:44:45.631][PAXOS][LEADER][Node 999] ACCEPT  -> Node 2 ballot=4
+[14:44:45.633][PAXOS][LEADER][Node 2] ACCEPT  ballot=4 op_type=touch -> ACK LEARN
+[14:44:45.635][PAXOS][LEADER][Node 999] LEARN   <- Node 2 ballot=4 (ack)
+[14:44:45.635][PAXOS][LEADER][Node 999] ACCEPT  -> Node 4 ballot=4
+[14:44:45.635][PAXOS][FOLLOWER][Node 4] ACCEPT  ballot=4 op_type=touch -> ACK LEARN
+[14:44:45.639][PAXOS][LEADER][Node 999] LEARN   <- Node 4 ballot=4 (ack)
+[14:44:45.639][PAXOS][LEADER][Node 999] ACCEPT  -> Node 6 ballot=4
+[14:44:45.641][PAXOS][FOLLOWER][Node 6] ACCEPT  ballot=4 op_type=touch -> ACK LEARN
+[14:44:45.643][PAXOS][LEADER][Node 999] LEARN   <- Node 6 ballot=4 (ack)
+[14:44:45.644][PAXOS][LEADER][Node 999] COMMIT  ballot=4 acks=3/3 -> COMMITTED
+[14:44:45.645][PAXOS][LEADER][Node 999] LEARN   -> Node 2 ballot=4
+[14:44:45.645][PAXOS][LEADER][Node 2] LEARN   ballot=4 op_type=touch -> COMMITTED (logged)
+[14:44:45.645][PAXOS][LEADER][Node 999] LEARN   -> Node 4 ballot=4
+[14:44:45.645][PAXOS][FOLLOWER][Node 4] LEARN   ballot=4 op_type=touch -> COMMITTED (logged)
+[14:44:45.645][PAXOS][LEADER][Node 999] LEARN   -> Node 6 ballot=4
+[14:44:45.652][PAXOS][FOLLOWER][Node 6] LEARN   ballot=4 op_type=touch -> COMMITTED (logged)
+[14:44:45.652][PAXOS][LEADER][Node 999] APPLY   ballot=4 op_type=touch (leader applying)
+[14:44:45.677][PAXOS][LEADER][Node 999] PROPOSE ballot=5 op_type=delete_file (need 2/3 for majority)
+[14:44:45.677][PAXOS][LEADER][Node 999] ACCEPT  -> Node 2 ballot=5
+[14:44:45.685][PAXOS][LEADER][Node 2] ACCEPT  ballot=5 op_type=delete_file -> ACK LEARN
+[14:44:45.685][PAXOS][LEADER][Node 999] LEARN   <- Node 2 ballot=5 (ack)
+[14:44:45.685][PAXOS][LEADER][Node 999] ACCEPT  -> Node 4 ballot=5
+[14:44:45.689][PAXOS][FOLLOWER][Node 4] ACCEPT  ballot=5 op_type=delete_file -> ACK LEARN
+[14:44:45.690][PAXOS][LEADER][Node 999] LEARN   <- Node 4 ballot=5 (ack)
+[14:44:45.690][PAXOS][LEADER][Node 999] ACCEPT  -> Node 6 ballot=5
+[14:44:45.694][PAXOS][FOLLOWER][Node 6] ACCEPT  ballot=5 op_type=delete_file -> ACK LEARN
+[14:44:45.694][PAXOS][LEADER][Node 999] LEARN   <- Node 6 ballot=5 (ack)
+[14:44:45.698][PAXOS][LEADER][Node 999] COMMIT  ballot=5 acks=3/3 -> COMMITTED
+[14:44:45.698][PAXOS][LEADER][Node 999] LEARN   -> Node 2 ballot=5
+[14:44:45.702][PAXOS][LEADER][Node 2] LEARN   ballot=5 op_type=delete_file -> COMMITTED (logged)
+[14:44:45.703][PAXOS][LEADER][Node 999] LEARN   -> Node 4 ballot=5
+[14:44:45.703][PAXOS][FOLLOWER][Node 4] LEARN   ballot=5 op_type=delete_file -> COMMITTED (logged)
+[14:44:45.703][PAXOS][LEADER][Node 999] LEARN   -> Node 6 ballot=5
+[14:44:45.710][PAXOS][FOLLOWER][Node 6] LEARN   ballot=5 op_type=delete_file -> COMMITTED (logged)
+[14:44:45.712][PAXOS][LEADER][Node 999] APPLY   ballot=5 op_type=delete_file (leader applying)
+[14:44:45.776][PAXOS][LEADER][Node 999] PROPOSE ballot=1 op_type=touch (need 2/3 for majority)
+[14:44:45.777][PAXOS][LEADER][Node 999] ACCEPT  -> Node 2 ballot=1
+[14:44:45.779][PAXOS][LEADER][Node 2] ACCEPT  ballot=1 op_type=touch -> ACK LEARN
+[14:44:45.782][PAXOS][LEADER][Node 999] LEARN   <- Node 2 ballot=1 (ack)
+[14:44:45.782][PAXOS][LEADER][Node 999] ACCEPT  -> Node 4 ballot=1
+[14:44:45.785][PAXOS][FOLLOWER][Node 4] ACCEPT  ballot=1 op_type=touch -> ACK LEARN
+[14:44:45.786][PAXOS][LEADER][Node 999] LEARN   <- Node 4 ballot=1 (ack)
+[14:44:45.786][PAXOS][LEADER][Node 999] ACCEPT  -> Node 99 ballot=1
+[14:44:47.824][PAXOS][LEADER][Node 999] ACCEPT  -> Node 99 FAILED: [WinError 10061] No connection could be made because the target machine actively refused it (node unreachable)
+[14:44:47.826][PAXOS][LEADER][Node 999] COMMIT  ballot=1 acks=2/3 -> COMMITTED
+[14:44:47.828][PAXOS][LEADER][Node 999] LEARN   -> Node 2 ballot=1
+[14:44:47.828][PAXOS][LEADER][Node 2] LEARN   ballot=1 op_type=touch -> COMMITTED (logged)
+[14:44:47.830][PAXOS][LEADER][Node 999] LEARN   -> Node 4 ballot=1
+[14:44:47.832][PAXOS][FOLLOWER][Node 4] LEARN   ballot=1 op_type=touch -> COMMITTED (logged)
+[14:44:47.836][PAXOS][LEADER][Node 999] LEARN   -> Node 99 ballot=1
+[14:44:49.874][PAXOS][LEADER][Node 999] LEARN   -> Node 99 FAILED: [WinError 10061] No connection could be made because the target machine actively refused it
+[14:44:49.875][PAXOS][LEADER][Node 999] APPLY   ballot=1 op_type=touch (leader applying)

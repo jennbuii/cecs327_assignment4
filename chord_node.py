@@ -12,6 +12,7 @@ class ChordNode:
         self.storage = storage
         self.ring_bits = ring_bits
         self.ring_size = 2 ** ring_bits
+        self.finger_table = self._build_finger_table(self.node_id)
 
     #helper functions
     def _sorted_peers(self):
@@ -23,6 +24,30 @@ class ChordNode:
     
     def _is_local(self, peer):
         return peer["node_id"] == self.node_id and peer["host"] == self.host and peer["port"] == self.port
+
+    def _find_successor_by_id(self, key_id):
+        """Return the peer whose node_id is the successor of key_id on the ring."""
+        for peer in self._sorted_peers():
+            if key_id <= peer["node_id"]:
+                return peer
+        return self._sorted_peers()[0]
+
+    def _build_finger_table(self, target_node_id):
+        """Build a Chord finger table from the perspective of target_node_id."""
+        table = []
+        for i in range(self.ring_bits):
+            start = (target_node_id + 2 ** i) % self.ring_size
+            successor = self._find_successor_by_id(start)
+            table.append({"finger": i + 1, "start": start, "successor_id": successor["node_id"]})
+        return table
+
+    def print_finger_table(self, target_node_id=None):
+        """Print the finger table for this node (or any node ID if provided)."""
+        nid = target_node_id if target_node_id is not None else self.node_id
+        table = self._build_finger_table(nid) if target_node_id is not None else self.finger_table
+        print(f"  Finger table for Node {nid}:")
+        for entry in table:
+            print(f"    [{entry['finger']:2d}] start={entry['start']:4d} -> Node {entry['successor_id']}")
     
     def find_successor_for_sort(self, sort_key):
         try:

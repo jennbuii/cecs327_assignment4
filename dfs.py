@@ -63,8 +63,25 @@ class DFSAPI:
             return self._apply_append_content(op["filename"], op["content"])
         elif op_type == "delete_file":
             return self._apply_delete_file(op["filename"])
+        elif op_type == "sort_file":
+            # Delete any existing output file so sort_file is idempotent across runs
+            self._apply_delete_file(op["output_filename"])  # no-op if file doesn't exist
+            touch_result = self._apply_touch(op["output_filename"])
+            if touch_result["status"] != "success":
+                return touch_result
+            return self._apply_append_content(op["output_filename"], op["sorted_content"])
         else:
             return {"status": "error", "message": f"Unknown operation type '{op_type}'."}
+
+    def write_sorted(self, output_filename, sorted_content):
+        """Write sorted output as a single atomic Paxos-protected operation."""
+        if self.paxos is None:
+            touch = self._apply_touch(output_filename)
+            if touch["status"] != "success":
+                return touch
+            return self._apply_append_content(output_filename, sorted_content)
+        op = {"op": "sort_file", "output_filename": output_filename, "sorted_content": sorted_content}
+        return self.paxos.propose(op)
 
     #paxos methods
     def touch(self, filename):
@@ -79,8 +96,6 @@ class DFSAPI:
                 data = f.read()
         except Exception as e:
             return {"status": "error", "message": f"Failed to read local file: {str(e)}"}
-        chunks = self._split_into_pages(data)
-        
         if self.paxos is None:
             return self._apply_append(filename, local_path)
         op = {"op": "append", "filename": filename, "content": data}
@@ -143,9 +158,10 @@ class DFSAPI:
         for i, chunk in enumerate(chunks):
             page_no = start_page_no + i
             page_key = self._page_key(filename, page_no)
+            replica_peers = self.chord.get_replica_peers(page_key)
+            replica_ids = [p["node_id"] for p in replica_peers]
             self.chord.put(page_key, {"kind": "page", "filename": filename, "page_no": page_no, "data": chunk})
-            page_descriptor = {"page_no": page_no, "page_key": page_key, "size_bytes": len(chunk)}
-            metadata["pages"].append(page_descriptor)
+            metadata["pages"].append({"page_no": page_no, "page_key": page_key, "size_bytes": len(chunk), "replicas": replica_ids})
 
         metadata["num_pages"] += len(chunks)
         metadata["size_bytes"] += len(data)
@@ -164,8 +180,10 @@ class DFSAPI:
         for i, chunk in enumerate(chunks):
             page_no = start_page_no + i
             page_key = self._page_key(filename, page_no)
+            replica_peers = self.chord.get_replica_peers(page_key)
+            replica_ids = [p["node_id"] for p in replica_peers]
             self.chord.put(page_key, {"kind": "page", "filename": filename, "page_no": page_no, "data": chunk})
-            metadata["pages"].append({"page_no": page_no, "page_key": page_key, "size_bytes": len(chunk)})
+            metadata["pages"].append({"page_no": page_no, "page_key": page_key, "size_bytes": len(chunk), "replicas": replica_ids})
         metadata["num_pages"] += len(chunks)
         metadata["size_bytes"] += len(data)
         metadata["version"] += 1

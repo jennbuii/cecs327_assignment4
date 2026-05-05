@@ -104,13 +104,14 @@ class TCPServer:
                 elif action == "PAXOS_ACCEPT":
                     proposal_id = request.get("proposal_id")
                     op = request.get("op")
+                    print(f"[{self.port}] PAXOS ACCEPT ballot={proposal_id} op_type={op.get('op') if op else None}")
                     response = self.storage.paxos.handle_accept(proposal_id, op)
-                    print(f"[{self.port}] handling {action} request for proposal_id '{proposal_id}'")
                 
                 elif action == "PAXOS_LEARN":
                     proposal_id = request.get("proposal_id")
-                    response = self.storage.paxos.handle_learn(proposal_id)
-                    print(f"[{self.port}] handling {action} request for proposal_id '{proposal_id}'")
+                    op = request.get("op")
+                    print(f"[{self.port}] PAXOS LEARN  ballot={proposal_id} op_type={op.get('op') if op else None}")
+                    response = self.storage.paxos.handle_learn(proposal_id, op)
 
                 else:
                     response = {"status": "error", "message": f"Unknown action '{action}'."}

@@ -1,5 +1,4 @@
 import os
-import tempfile
 import hashlib
 import json
 
@@ -7,12 +6,6 @@ class Sorter:
     def __init__(self, dfs, chord):
         self.dfs = dfs
         self.chord = chord
-    
-    def _write_temp_file(self, records):
-        fd, path = tempfile.mkstemp(prefix="softed_", suffix=".txt", text=True)
-        with os.fdopen(fd, 'w') as f:
-            f.write(records)
-        return path
 
     def parse_record(self, data):
         records = []
@@ -67,7 +60,6 @@ class Sorter:
         if not sorted_peers:
             return []
         first_peer = sorted_peers[0]
-        last_peer = sorted_peers[-1]
         low_records = []
         mid_records = []
         high_records = []
@@ -114,14 +106,10 @@ class Sorter:
             self.distribute_partition(job_id, records)
             sorted_records = self.collect_partition(job_id)
             sorted_data = "\n".join([f"{key},{value}" for key, value in sorted_records])
-            temp_path = self._write_temp_file(sorted_data)
-            touch = self.dfs.touch(output_filename)
-            if touch["status"] != "success":
-                return {"status": "error", "message": f"Failed to create output file '{output_filename}': {touch.get('message', '')}"}
-            append = self.dfs.append(output_filename, temp_path)
-            if append["status"] != "success":
-                return {"status": "error", "message": f"Failed to write to output file '{output_filename}': {append.get('message', '')}"}
+            result = self.dfs.write_sorted(output_filename, sorted_data)
+            if result["status"] != "success":
+                return {"status": "error", "message": f"Failed to write sorted output '{output_filename}': {result.get('message', '')}"}
             self._clear_partition(job_id)
-            return append
+            return result
         except Exception as e:
             return {"status": "error", "message": f"Sorting failed: {str(e)}"}

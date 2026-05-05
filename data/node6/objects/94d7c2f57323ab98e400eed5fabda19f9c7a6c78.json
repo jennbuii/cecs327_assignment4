@@ -1,1 +1,1 @@
-{"kind": "metadata", "filename": "dfs_music_input.csv", "size_bytes": 102, "num_pages": 1, "pages": [{"page_no": 0, "page_key": "78d82f574cbff004de304db7af5f0e04c18ec5bd", "size_bytes": 102}], "version": 2}
+{"kind": "metadata", "filename": "dfs_music_input.csv", "size_bytes": 1446, "num_pages": 2, "pages": [{"page_no": 0, "page_key": "78d82f574cbff004de304db7af5f0e04c18ec5bd", "size_bytes": 1024, "replicas": [2, 4, 6]}, {"page_no": 1, "page_key": "031511d9d2dffb0f54400156e6ec3f3393376801", "size_bytes": 422, "replicas": [2, 4, 6]}], "version": 2}

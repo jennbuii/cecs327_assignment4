@@ -57,19 +57,14 @@ class Sorter:
 
     def collect_partition(self, job_id):
         sorted_peers = self.chord._sorted_peers()
-        if not sorted_peers:
-            return []
-        first_peer = sorted_peers[0]
-        low_records = []
-        mid_records = []
-        high_records = []
+        all_records = []
         for peer in sorted_peers:
             if self.chord._is_local(peer):
                 partition_dir = os.path.join(self.chord.storage.base_dir, "sort_partitions")
                 path = os.path.join(partition_dir, f"{job_id}.json")
                 if os.path.exists(path):
                     with open(path, 'r') as f:
-                        record_data = json.load(f)
+                        records = json.load(f)
                 else:
                     record_data = []
             else:
@@ -77,20 +72,12 @@ class Sorter:
                 if response["status"] == "success":
                     record_data = response["records"]
                 else:
-                    print(f"Failed to get partition for job_id '{job_id}' from node {peer['node_id']}: {response.get('message', '')}")
+                    print(f"Failed to get partition for job_id '{job_id}' from node {peer['node_id']}")
                     record_data = []
-            record_data.sort(key=lambda x: x[0])
-            if peer["node_id"] == first_peer["node_id"]:
-                for key, value in record_data:
-                    if int(key) <= first_peer["node_id"]:
-                        low_records.append((key, value))
-                    else:
-                        high_records.append((key, value))
-            else:
-                for key, value in record_data:
-                    mid_records.append((key, value))
-        return low_records + mid_records + high_records
-
+            for key, value in record_data:
+                all_records.append((key, value))
+        all_records.sort(key=lambda x: x[0])
+        return all_records
 
     def sort_file(self, filename, output_filename):
         input = self.dfs.read(filename)

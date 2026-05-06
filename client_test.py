@@ -118,7 +118,7 @@ def run_tests():
     res = dfs.read(dfs_output_name)
     if res["status"] == "success":
         lines = res["content"].strip().split("\n")
-        keys = [line.split(",")[0].strip() for line in lines if line.strip()]
+        keys = [int(line.split(",")[0].strip()) for line in lines if line.strip()]
         is_sorted = keys == sorted(keys)
         print(f"  Total sorted lines : {len(lines)}")
         print(f"  First 3            : {lines[:3]}")
